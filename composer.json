@@ -1,0 +1,19 @@
+{
+  "name": "the16thpythonist/kitopen-api",
+  "description": "A REST Api wrapper for the Kit Open publications API (Unofficial)",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Jonas Teufel",
+      "email": "jonseb1998@gmail.com"
+    }
+  ],
+  "require": {
+    "guzzlehttp/guzzle": "6.2.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "the16thpythonist\\KITOpen\\": "src/the16thpythonist/KITOpen"
+    }
+  }
+}
