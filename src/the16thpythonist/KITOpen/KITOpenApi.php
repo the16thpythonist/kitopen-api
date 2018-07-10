@@ -145,7 +145,7 @@ class KITOpenApi
      *
      * Added 10.07.2018
      *
-     * @since 0.0.0.0
+     * @since 0.0.0.1
      *
      * @param array $args
      * @return array
@@ -216,4 +216,23 @@ class KITOpenApi
 
     }
 
+    /**
+     * returns the URL to a specific publication page, if given the id of that publication
+     *
+     * CHANGELOG
+     *
+     * Added 10.07.2018
+     *
+     * @since 0.0.0.2
+     *
+     * @param string $id    the kit open id of the publication for which to return the url
+     * @return string   the url to the page of the publication
+     */
+    public static function getPublicationURL(string $id): string {
+        /*
+         * To access the specific page of any given KITOpen publication, the base url just has to be extended with the
+         * id of that publication
+         */
+        return self::URI . $id;
+    }
 }
