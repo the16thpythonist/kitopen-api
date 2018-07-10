@@ -29,7 +29,13 @@ class KITOpenApi
         'timeout'   => 30
     );
     const ARGS_DEFAULT = array(
-
+        'author'        => '',
+        'institute'     => '',
+        'year'          => '',
+        'tag'           => '',
+        'type'          => '',
+        'limit'         => 200,
+        'offset'        => 0,
     );
 
     /**
@@ -89,6 +95,12 @@ class KITOpenApi
      *
      * Added 03.07.2018
      *
+     * Changed 10.07.2018
+     *
+     * Fixed the bug, that I used the normal "$args" to get the values from and not "$this->>args" as I have loaded all
+     * the values in there.
+     * Moved the creation of the options array for the http client to a separate private method.
+     *
      * @since 0.0.0.0
      *
      * @throws InvalidArgumentException if there is no search parameter given for a search
@@ -107,21 +119,7 @@ class KITOpenApi
         $this->args = array_replace($this->args, $args);
 
         // Building the array to be passed as URL parameters to the GET request
-        $options = array(
-            'query' => array(
-                'lang'                      => $this->config['lang'],
-                'format'                    => 'csl_json',
-                'style'                     => 'kit-3lines-title_b-authors-other',
-                'referencing'               => 'all',
-                'external_publications'     => 'all',
-                'organisations'             => $args['institute'],
-                'authors'                   => $args['author'],
-                'title_contains'            => $args['tag'],
-                'year'                      => $args['year'],
-                'limit'                     => $args['limit'],
-                'offset'                    => $args['offset']
-            )
-        );
+        $options = $this->assembleSearchOptions($args);
 
         // Sending the request
         $response = $this->client->get(self::SEARCH_URI, $options);
@@ -132,12 +130,63 @@ class KITOpenApi
 
         // Formatting the response objects to publication objects
         $publications = array();
-        foreach ($json as $reponse) {
+        foreach ($json as $response) {
             $publication = Publication::fromResponse($response);
             $publications[] = $publication;
         }
 
         return $publications;
+    }
+
+    /**
+     * Creates the options array, that is to be passed to the http client which makes the API GET request.
+     *
+     * CHANGELOG
+     *
+     * Added 10.07.2018
+     *
+     * @since 0.0.0.0
+     *
+     * @param array $args
+     * @return array
+     */
+    private function assembleSearchOptions(array $args) {
+        /*
+         * This array is the actual array, that is going to be used to create the URL parameters for the GET query.
+         * Some of the values can be hardcoded, as they are not dependant on user preferences, ie given by the $args
+         * array.
+         */
+        $query = array(
+            'lang'                      => $this->config['lang'],
+            'format'                    => 'csl_json',
+            'style'                     => 'kit-3lines-title_b-authors-other',
+            'referencing'               => 'all',
+            'external_publications'     => 'all',
+        );
+        /*
+         * This array is simply a mapping, as keys it has the strings that have to be used as the URL variables. These
+         * are specified by the KIT Open API and cannot be changed. As values it has the corresponding keys used in
+         * the $args array.
+         * the array is being iterated to find out for which $args key there has actually been specified a value. If
+         * there was no value specified for a key (which means default '') then the corresponding URL variable will not
+         * appear in the URL as that would cause a HTTP Client exception. Only those args with actual values passed
+         * are being added to the $query array to be used in the URL
+         */
+        $map = array(
+            'organizations'             => 'institute',
+            'authors'                   => 'author',
+            'title_contains'            => 'tag',
+            'year'                      => 'year',
+            'limit'                     => 'limit',
+            'offset'                    => 'offset'
+        );
+        foreach ($map as $option => $key) {
+            if ($this->args[$key] !== '') {
+                $query[$option] = $this->args[$key];
+            }
+        }
+        $options = array('query' => $query);
+        return $options;
     }
 
     /**

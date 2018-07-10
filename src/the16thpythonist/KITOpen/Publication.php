@@ -209,6 +209,12 @@ class Publication
      *
      * Added 04.07.2018
      *
+     * Changed 10.07.2018
+     *
+     * Fixed the bug with the author key not always being a part of the response array, by making the loop, that creates
+     * the authors conditional and only executed if the key explicitly exists
+     *
+     *
      * @since 0.0.0.0
      *
      * @param array $response the assoc array that was from the API response
@@ -216,9 +222,11 @@ class Publication
      */
     public static function fromResponse(array $response): Publication {
         $authors = array();
-        foreach ($response['authors'] as $author_response) {
-            $author = Author::fromResponse($author_response);
-            $authors[] = $author;
+        if ( array_key_exists('author', $response) ){
+            foreach ($response['author'] as $author_response) {
+                $author = Author::fromResponse($author_response);
+                $authors[] = $author;
+            }
         }
 
         $args = array(
