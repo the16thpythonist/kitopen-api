@@ -22,6 +22,7 @@ class KITOpenApiTest extends TestCase
         $args = array(
             'type'          => 'ZEITSCHRIFTENAUFSATZ',
             'institute'     => 'IPE',
+            'year'          => '2014-'
         );
         $publications = $api->search($args);
         $this->assertNotEquals(count($publications), 0);

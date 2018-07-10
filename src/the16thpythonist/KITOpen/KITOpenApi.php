@@ -178,7 +178,8 @@ class KITOpenApi
             'title_contains'            => 'tag',
             'year'                      => 'year',
             'limit'                     => 'limit',
-            'offset'                    => 'offset'
+            'offset'                    => 'offset',
+            'types'                      => 'type'
         );
         foreach ($map as $option => $key) {
             if ($this->args[$key] !== '') {
