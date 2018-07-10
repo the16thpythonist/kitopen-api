@@ -20,7 +20,7 @@ use InvalidArgumentException;
  */
 class KITOpenApi
 {
-    const URI = "https://https://publikationen.bibliothek.kit.edu/";
+    const URI = "https://publikationen.bibliothek.kit.edu/";
     const SEARCH_URI = "https://publikationen.bibliothek.kit.edu/publikationslisten/get.php";
     const TIMEOUT = 30;
 
