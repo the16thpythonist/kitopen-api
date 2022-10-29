@@ -2,7 +2,7 @@
   "name": "the16thpythonist/kitopen-api",
   "description": "A REST Api wrapper for the Kit Open publications API (Unofficial)",
   "type": "library",
-  "version": "0.0.0.1",
+  "version": "0.0.1",
   "authors": [
     {
       "name": "Jonas Teufel",
@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "guzzlehttp/guzzle": "6.2.1"
+    "guzzlehttp/guzzle": ">=6.3.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^6"
